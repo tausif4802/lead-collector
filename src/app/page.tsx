@@ -10,13 +10,14 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export default function Home() {
   const [handleInput, setHandleInput] = useState('');
+  const [loading, setLoading] = useState(false); // Add loading state
 
   const handleChange = (e: any) => {
     setHandleInput(e.target.value);
   };
 
   const appendRow = async () => {
-    console.log(handleInput);
+    setLoading(true);
     try {
       await axios({
         method: 'post',
@@ -37,8 +38,6 @@ export default function Home() {
         theme: 'colored',
       });
     } catch (error: any) {
-      console.error('Error appending row:', error);
-
       toast.error(error.response.data ? error.response.data : error.message, {
         position: 'bottom-center',
         autoClose: 2000,
@@ -49,6 +48,8 @@ export default function Home() {
         progress: undefined,
         theme: 'colored',
       });
+    } finally {
+      setLoading(false); // Set loading back to false when request is complete
     }
   };
 
@@ -62,8 +63,8 @@ export default function Home() {
           placeholder="Enter Influencer Instagram Handle"
           onChange={handleChange}
         />
-        <Button className="m-8" onClick={appendRow}>
-          Add Influencer to Sheet
+        <Button className="m-8" onClick={appendRow} disabled={loading}>
+          {loading ? 'Adding...' : 'Add Influencer to Sheet'}
         </Button>
       </Card>
       <ToastContainer
