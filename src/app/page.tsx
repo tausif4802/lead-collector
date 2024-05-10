@@ -49,6 +49,7 @@ export default function Home() {
         theme: 'colored',
       });
     } finally {
+      setHandleInput('');
       setLoading(false); // Set loading back to false when request is complete
     }
   };
@@ -61,7 +62,11 @@ export default function Home() {
         </h1>
         <Input
           placeholder="Enter Influencer Instagram Handle"
+          value={handleInput}
           onChange={handleChange}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') appendRow();
+          }}
         />
         <Button className="m-8" onClick={appendRow} disabled={loading}>
           {loading ? 'Adding...' : 'Add Influencer to Sheet'}
